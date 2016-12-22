@@ -1,0 +1,16 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  Include:
+    - '**/Gemfile'
+    - '**/Rakefile'
+  Exclude:
+    - 'bin/**/*'
+    - 'lib/eet_cz/akami_patch.rb'
+Metrics/LineLength:
+ Max: 180
+Metrics/MethodLength:
+ Max: 80
+Documentation:
+ Enabled: false
+Style/ClassAndModuleCamelCase:
+ Enabled: false
