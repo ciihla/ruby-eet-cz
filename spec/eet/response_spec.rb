@@ -35,8 +35,8 @@ describe EET_CZ::Response do
 
     it 'returns header' do
       header = response.header
-      expect(response.uuid).to eq('a8c040bf-99c6-446c-b1e8-7702ce31530d')
-      expect(response.rejected_at).to eq('2016-12-19T08:46:41+01:00')
+      expect(response.uuid_zpravy).to eq('a8c040bf-99c6-446c-b1e8-7702ce31530d')
+      expect(response.dat_odmit).to eq('2016-12-19T08:46:41+01:00')
       expect(header.text).to eq('')
     end
   end
@@ -88,12 +88,12 @@ ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-pr
 
     it 'returns fik' do
       expect(response.fik).to eq('fbfef3cf-ab44-4e5b-b1f5-16eccc2d9485-ff')
-      expect(response.confirmed_at).to eq('2016-12-19T12:14:02+01:00')
+      expect(response.dat_prij).to eq('2016-12-19T12:14:02+01:00')
       expect(response.test?).to eq(true)
     end
 
     it 'returns header' do
-      expect(response.uuid).to eq('3d2e888f-25a9-462f-9f1d-554fe7e9551d')
+      expect(response.uuid_zpravy).to eq('3d2e888f-25a9-462f-9f1d-554fe7e9551d')
       expect(response.bkp).to eq('3F9119C1-FBF34535-D30B60F8-9859E4A6-C8C8AAFA')
     end
   end

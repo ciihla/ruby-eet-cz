@@ -3,10 +3,10 @@ require 'spec_helper'
 
 describe EET_CZ::Request do
   let(:receipt) do
-    EET_CZ::Receipt.new(created_at:       Time.parse('2016-08-05T00:30:12+02:00'),
-                        cash_register_id: '/5546/RO24',
-                        receipt_number:   '0/6460/ZQ42',
-                        total_price:      34_113.00)
+    EET_CZ::Receipt.new(dat_trzby:       Time.parse('2016-08-05T00:30:12+02:00'),
+                        id_pokl: '/5546/RO24',
+                        porad_cis:   '0/6460/ZQ42',
+                        celk_trzba:      34_113.00)
   end
 
   let(:request) { EET_CZ::Request.new(receipt) }
@@ -25,8 +25,8 @@ szSOdqlAdkey7M6m12AQW0LkBSPqPUi3NWa+Flo9xAPRyEKA49EQpndngu+kgPncElIfczSyhWOdQVq3
 
   before(:each) do
     EET_CZ.configure do |config|
-      config.vat          = 'CZ1212121218'
-      config.premisses_id = '273'
+      config.dic_popl = 'CZ1212121218'
+      config.id_provoz = '273'
     end
   end
 

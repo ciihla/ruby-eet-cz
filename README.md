@@ -28,25 +28,28 @@ EET_CZ.configure do |c|
   c.ssl_cert_file         = path_to('certificate.pem') # or 'p12' supported
   c.ssl_cert_key_file     = path_to('private_key.pem')
   c.ssl_cert_key_password = 'secret'
-  c.test_mode             = true # It sends attribute: overeni='true'
+  c.overeni               = true # It sends attribute: overeni='true'
   c.debug_logger          = Logger.new('test.log') # or Logger.new($stdout) in tests?
-  c.vat                   = 'CZ1212121218' # dic_popl
-  c.premisses_id          = '555' # id_provoz
-  c.eet_mode              = '0' # rezim
+  c.dic_popl              = 'CZ1212121218' # dic_popl
+  c.id_provoz             = '555' # id_provoz
+  c.rezim                 = '0' # rezim
 end
 
-receipt = EET_CZ::Receipt.new(created_at:       Time.zone.now,
-                              cash_register_id: '/4432/D12',
-                              receipt_number:   '4/541/FR34',
-                              total_price:      25.5)
+receipt = EET_CZ::Receipt.new(dat_trzby:  Time.zone.now,
+                              id_pokl:    '/4432/D12',
+                              porad_cis:  '4/541/FR34',
+                              celk_trzba: 25.5)
 
 request = EET_CZ::Request.new(receipt)
 response = request.run
         
 response.fik
-response.uuid
-response.confirmed_at
+response.uuid_zpravy
+response.dat_prij
 response.error                                                                                                                
+response.bkp                                                                                                                
+response.test?                                                                                                           
+response.success?                                                                                                           
 ```
 
 ## Development

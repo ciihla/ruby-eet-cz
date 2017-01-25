@@ -21,7 +21,6 @@ module Akami
             'CanonicalizationMethod/' => nil,
             'SignatureMethod/'        => nil,
             'Reference'               => [
-              # signed_info_transforms.merge(signed_info_digest_method).merge({ "DigestValue" => timestamp_digest }),
               signed_info_transforms.merge(signed_info_digest_method).merge('DigestValue' => body_digest)
             ],
             :attributes! => {
@@ -56,7 +55,7 @@ module Akami
       end
 
       def digest_class
-        "OpenSSL::Digest::#{digest}".constantize
+        @digest_class ||= "OpenSSL::Digest::#{digest}".constantize
       end
     end
   end

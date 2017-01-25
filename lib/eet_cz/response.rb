@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 module EET_CZ
   class Response
-    attr_reader :fik, :error, :header, :test, :uuid, :confirmed_at, :rejected_at, :bkp, :warnings
+    # TODO: extend Response class for Test & Prod env!
+    attr_reader :fik, :error, :header, :test, :uuid_zpravy, :dat_prij, :dat_odmit, :bkp, :warnings
 
     def initialize(response)
       response.remove_namespaces!
@@ -15,6 +16,16 @@ module EET_CZ
       parse_data
     end
 
+    def success?
+      error.nil? || error.attributes['kod'].value.to_i.zero?
+    end
+
+    def test?
+      test.present?
+    end
+
+    private
+
     def parse_data
       parse_header
 
@@ -27,21 +38,11 @@ module EET_CZ
     end
 
     def parse_header
-      @uuid         = header_attribute('uuid_zpravy')
-      @confirmed_at = header_attribute('dat_prij')
-      @rejected_at  = header_attribute('dat_odmit')
-      @bkp          = header_attribute('bkp')
+      @uuid_zpravy = header_attribute('uuid_zpravy')
+      @dat_prij    = header_attribute('dat_prij')
+      @dat_odmit   = header_attribute('dat_odmit')
+      @bkp         = header_attribute('bkp')
     end
-
-    def success?
-      error.nil? || error.attributes['kod'].value.to_i.zero?
-    end
-
-    def test?
-      test.present?
-    end
-
-    private
 
     def header_attribute(attr)
       @header.attributes[attr].try(:value)

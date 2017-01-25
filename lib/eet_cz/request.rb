@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 module EET_CZ
   class Request
-    attr_reader :receipt, :client
+    attr_reader :receipt, :client, :options
 
-    def initialize(receipt)
+    # options:
+    # @prvni_zaslani: true=first try; false=retry
+    def initialize(receipt, options = {})
       raise('certificate not found') if EET_CZ.config.ssl_cert_file.blank?
       raise('ssh key not found') if EET_CZ.config.ssl_cert_key_file.blank?
       @receipt = receipt
-      @client  = EET_CZ::Client.init
+      @options = options
+      @client  = EET_CZ::Client.instance
     end
 
     def run
@@ -19,10 +22,10 @@ module EET_CZ
     def header
       {
         'eet:Hlavicka' => {
-          '@uuid_zpravy' => receipt.uuid, # RFC 4122
-          '@dat_odesl'     => receipt.created_at, # ISO 8601
-          '@prvni_zaslani' => true, # 1=first try; 0=retry # TODO configurable?
-          '@overeni'       => EET_CZ.config.test_mode # 1=testing mode; 0=production mode!
+          '@uuid_zpravy' => receipt.uuid_zpravy, # RFC 4122
+          '@dat_odesl'     => receipt.dat_trzby, # ISO 8601
+          '@prvni_zaslani' => prvni_zaslani, # true=first try; false=retry
+          '@overeni'       => EET_CZ.config.overeni || true # true=testing mode; false=production mode!
         }
       }
     end
@@ -30,13 +33,13 @@ module EET_CZ
     def data
       {
         'eet:Data' => {
-          '@dic_popl' => EET_CZ.config.vat,
-          '@id_provoz'  => EET_CZ.config.premisses_id,
-          '@id_pokl'    => receipt.cash_register_id,
-          '@porad_cis'  => receipt.receipt_number,
-          '@dat_trzby'  => receipt.created_at,
-          '@celk_trzba' => receipt.total_price,
-          '@rezim'      => EET_CZ.config.eet_mode || '0'
+          '@dic_popl' => EET_CZ.config.dic_popl,
+          '@id_provoz'  => id_provoz,
+          '@id_pokl'    => receipt.id_pokl,
+          '@porad_cis'  => receipt.porad_cis,
+          '@dat_trzby'  => receipt.dat_trzby,
+          '@celk_trzba' => receipt.celk_trzba,
+          '@rezim'      => EET_CZ.config.rezim || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
         }
       }
     end
@@ -67,6 +70,8 @@ module EET_CZ
       Base64.strict_encode64(private_key.sign(OpenSSL::Digest::SHA256.new, plain_text))
     end
 
+    # Digest from pkp
+    # i.e: '03ec1d0e-6d9f77fb-1d798ccb-f4739666-a4069bc3'
     def bkp(base64_pkp = pkp)
       Digest::SHA1.hexdigest(Base64.strict_decode64(base64_pkp)).upcase.scan(/.{8}/).join('-')
     end
@@ -74,12 +79,12 @@ module EET_CZ
     private
 
     def plain_text
-      [EET_CZ.config.vat,
-       EET_CZ.config.premisses_id,
-       receipt.cash_register_id,
-       receipt.receipt_number,
-       receipt.created_at,
-       receipt.total_price].join('|')
+      [EET_CZ.config.dic_popl,
+       id_provoz,
+       receipt.id_pokl,
+       receipt.porad_cis,
+       receipt.dat_trzby,
+       receipt.celk_trzba].join('|')
     end
 
     def private_key
@@ -93,6 +98,14 @@ module EET_CZ
 
     def cert_key_type
       EET_CZ.config.ssl_cert_key_file.split('.').last || 'p12'
+    end
+
+    def id_provoz
+      options[:id_provoz] || EET_CZ.config.id_provoz
+    end
+
+    def prvni_zaslani
+      options[:prvni_zaslani] || true
     end
   end
 end

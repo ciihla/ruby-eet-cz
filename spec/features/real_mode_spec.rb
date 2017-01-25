@@ -3,10 +3,10 @@ require 'spec_helper'
 
 describe 'real mode' do
   let(:receipt) do
-    EET_CZ::Receipt.new(created_at:       Time.parse('2016-08-05T00:30:12+02:00'),
-                        cash_register_id: '/5546/RO24',
-                        receipt_number:   '0/6460/ZQ42',
-                        total_price:      34_113.00)
+    EET_CZ::Receipt.new(dat_trzby:       Time.parse('2016-08-05T00:30:12+02:00'),
+                        id_pokl: '/5546/RO24',
+                        porad_cis:   '0/6460/ZQ42',
+                        celk_trzba:      34_113.00)
   end
 
   let(:request) { EET_CZ::Request.new(receipt) }
@@ -20,7 +20,7 @@ describe 'real mode' do
   context 'real mode' do
     before(:each) do
       EET_CZ.configure do |config|
-        config.test_mode = false
+        config.overeni = false
       end
     end
 
@@ -43,7 +43,7 @@ describe 'real mode' do
       context 'invalid request' do
         before(:each) do
           EET_CZ.configure do |config|
-            config.vat = 'xxx'
+            config.dic_popl = 'xxx'
           end
         end
 
@@ -65,7 +65,7 @@ describe 'real mode' do
       context 'invalid request' do
         before(:each) do
           EET_CZ.configure do |config|
-            config.vat = 'xxx'
+            config.dic_popl = 'xxx'
           end
         end
 

@@ -6,14 +6,14 @@ module EET_CZ
     VALID_FORMAT = %r(\A[0-9a-zA-Z\.,:;\/#\-_]{1,20}\z)
 
     # ID pokladny
-    attr_reader :cash_register_id
+    attr_reader :id_pokl
     # ID dokladu/uctenky
-    attr_reader :receipt_number
+    attr_reader :porad_cis
 
-    validates :cash_register_id, presence: true, format: VALID_FORMAT
-    validates :receipt_number, presence: true, format: VALID_FORMAT
-    validates :created_at, presence: true
-    validates :total_price, presence: true
+    validates :id_pokl, presence: true, format: VALID_FORMAT
+    validates :porad_cis, presence: true, format: VALID_FORMAT
+    validates :dat_trzby, presence: true
+    validates :celk_trzba, presence: true
 
     def initialize(attributes = {})
       attributes.each do |key, value|
@@ -21,16 +21,16 @@ module EET_CZ
       end
     end
 
-    def uuid
-      @uuid ||= SecureRandom.uuid
+    def uuid_zpravy
+      @uuid_zpravy ||= SecureRandom.uuid
     end
 
-    def total_price
-      format('%.2f', @total_price.to_f)
+    def celk_trzba
+      format('%.2f', @celk_trzba.to_f)
     end
 
-    def created_at
-      (@created_at || Time.current).iso8601
+    def dat_trzby
+      (@dat_trzby || Time.current).iso8601
     end
   end
 end

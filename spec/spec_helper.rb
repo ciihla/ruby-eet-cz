@@ -15,12 +15,11 @@ RSpec.configure do |config|
       c.ssl_cert_file         = cert_fixture_path('certificate.pem')
       c.ssl_cert_key_file     = cert_fixture_path('private_key.pem')
       c.ssl_cert_key_password = nil
-      c.test_mode             = true # Use only test mode! It sends overeni='true'
-      c.debug                 = false
-      c.vat                   = 'CZ1212121218'
-      c.premisses_id          = '273'
-      c.eet_mode              = '0'
-      # c.debug_logger          = Logger.new($stdout)
+      c.overeni               = true # Use only test mode! It sends overeni='true'
+      c.debug_logger          = false
+      c.dic_popl              = 'CZ1212121218'
+      c.id_provoz             = '273'
+      c.rezim                 = '0'
     end
   end
 end

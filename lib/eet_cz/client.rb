@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module EET_CZ
   class Client
-    def self.init
+    def self.instance
       new.client
     end
 
