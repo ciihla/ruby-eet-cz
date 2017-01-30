@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe EET_CZ::Response do
-  let(:response) { EET_CZ::Response.new(Nokogiri::XML(xml)) }
+describe EET_CZ::Response::Base do
+  let(:response) { EET_CZ::Response::Base.parse(Nokogiri::XML(xml)) }
 
   context 'fault' do
     let(:xml) do
@@ -16,28 +16,40 @@ describe EET_CZ::Response do
     <eet:Odpoved>
       <eet:Hlavicka uuid_zpravy="a8c040bf-99c6-446c-b1e8-7702ce31530d" dat_odmit="2016-12-19T08:46:41+01:00"/>
       <eet:Chyba kod="4" test="true">Neplatny podpis SOAP zpravy</eet:Chyba>
+      <eet:Varovani kod_varov="2" >
+        Chybny format DIC poverujiciho poplatnika
+      </eet:Varovani>
+      <eet:Varovani kod_varov="3" >
+       Chybna hodnota PKP
+      </eet:Varovani>
     </eet:Odpoved>
   </soapenv:Body>
 </soapenv:Envelope>'
     end
 
     it 'returns instance' do
-      expect(response).to be_an_instance_of(EET_CZ::Response)
+      expect(response).to be_an_instance_of(EET_CZ::Response::Error)
       expect(response).not_to be_success
     end
 
     it 'returns error' do
-      error = response.error
-      expect(error.attributes['kod'].value).to eq('4')
-      expect(error.attributes['test'].value).to eq('true')
-      expect(error.text).to eq('Neplatny podpis SOAP zpravy')
+      expect(response.kod).to eq(4)
+      expect(response.test?).to eq(true)
+      expect(response.error).to eq('Neplatny podpis SOAP zpravy')
     end
 
     it 'returns header' do
-      header = response.header
       expect(response.uuid_zpravy).to eq('a8c040bf-99c6-446c-b1e8-7702ce31530d')
       expect(response.dat_odmit).to eq('2016-12-19T08:46:41+01:00')
-      expect(header.text).to eq('')
+    end
+
+    it 'returns warnings' do
+      warnings = response.warnings
+      expect(warnings.count).to eq(2)
+      expect(warnings.first.text).to eq('Chybny format DIC poverujiciho poplatnika')
+      expect(warnings.first.kod).to eq(2)
+      expect(warnings.last.text).to eq('Chybna hodnota PKP')
+      expect(warnings.last.kod).to eq(3)
     end
   end
 
@@ -82,7 +94,7 @@ ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-pr
     end
 
     it 'returns instance' do
-      expect(response).to be_an_instance_of(EET_CZ::Response)
+      expect(response).to be_an_instance_of(EET_CZ::Response::Success)
       expect(response).to be_success
     end
 

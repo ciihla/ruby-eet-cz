@@ -3,10 +3,10 @@ require 'spec_helper'
 
 describe 'real mode' do
   let(:receipt) do
-    EET_CZ::Receipt.new(dat_trzby:       Time.parse('2016-08-05T00:30:12+02:00'),
-                        id_pokl: '/5546/RO24',
-                        porad_cis:   '0/6460/ZQ42',
-                        celk_trzba:      34_113.00)
+    EET_CZ::Receipt.new(dat_trzby:  Time.parse('2016-08-05T00:30:12+02:00'),
+                        id_pokl:    '/5546/RO24',
+                        porad_cis:  '0/6460/ZQ42',
+                        celk_trzba: 34_113.00)
   end
 
   let(:request) { EET_CZ::Request.new(receipt) }
@@ -34,8 +34,10 @@ describe 'real mode' do
       context 'valid request' do
         it 'success' do
           response = do_request('trzba/real_mode/play_ground/valid')
+          expect(response).to be_an_instance_of(EET_CZ::Response::Success)
           expect(response).to be_success
           expect(response).to be_test
+          expect(response.dat_prij).to be_present
           expect(response.fik).to eq('fbfef3cf-ab44-4e5b-b1f5-16eccc2d9485-ff')
         end
       end
@@ -49,8 +51,10 @@ describe 'real mode' do
 
         it 'invalid request' do
           response = do_request('trzba/real_mode/play_ground/invalid')
+          expect(response).to be_an_instance_of(EET_CZ::Response::Error)
           expect(response).to be_test
           expect(response).not_to be_success
+          expect(response.dat_odmit).to be_present
         end
       end
     end
@@ -71,6 +75,7 @@ describe 'real mode' do
 
         it 'invalid request' do
           response = do_request('trzba/real_mode/production/invalid')
+          expect(response).to be_an_instance_of(EET_CZ::Response::Error)
           expect(response).not_to be_success
           expect(response).not_to be_test
         end

@@ -15,7 +15,7 @@ module EET_CZ
 
     def run
       response = client.call('Trzba', soap_action: 'http://fs.mfcr.cz/eet/OdeslaniTrzby', message: [header, data, footer].reduce({}, :merge))
-      EET_CZ::Response.new(response.doc)
+      EET_CZ::Response::Base.parse(response.doc)
       # TODO: error handling (Net::HTTP, etc..)
     end
 

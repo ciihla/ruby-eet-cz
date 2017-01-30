@@ -40,16 +40,18 @@ receipt = EET_CZ::Receipt.new(dat_trzby:  Time.zone.now,
                               porad_cis:  '4/541/FR34',
                               celk_trzba: 25.5)
 
-request = EET_CZ::Request.new(receipt)
+request = EET_CZ::Request.new(receipt, prvni_zaslani: false) # default true
 response = request.run
-        
+
+response.test?
+response.success?
 response.fik
+response.bkp
 response.uuid_zpravy
 response.dat_prij
-response.error                                                                                                                
-response.bkp                                                                                                                
-response.test?                                                                                                           
-response.success?                                                                                                           
+response.dat_odmit
+response.error
+response.warnings
 ```
 
 ## Development
