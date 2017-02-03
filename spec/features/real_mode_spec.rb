@@ -38,7 +38,8 @@ describe 'real mode' do
           expect(response).to be_success
           expect(response).to be_test
           expect(response.dat_prij).to be_present
-          expect(response.fik).to eq('fbfef3cf-ab44-4e5b-b1f5-16eccc2d9485-ff')
+          expect(response.warnings).not_to be_present
+          expect(response.fik).to eq('92d9da29-6515-4446-87a2-c1497c561534-ff')
         end
       end
 

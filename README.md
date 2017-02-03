@@ -25,12 +25,12 @@ require 'eet_cz'
 
 EET_CZ.configure do |c|
   c.endpoint              = EET_CZ::PG_EET_URL # or EET_CZ::PROD_EET_URL
-  c.ssl_cert_file         = path_to('certificate.pem') # or 'p12' supported
-  c.ssl_cert_key_file     = path_to('private_key.pem')
+  c.ssl_cert_file         = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem' supported
+  c.ssl_cert_key_file     = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem'
   c.ssl_cert_key_password = 'secret'
-  c.overeni               = true # It sends attribute: overeni='true'
+  c.overeni               = true # It sends attribute: overeni='true' Or explicitly specify 'false'
   c.debug_logger          = Logger.new('test.log') # or Logger.new($stdout) in tests?
-  c.dic_popl              = 'CZ1212121218' # dic_popl
+  c.dic_popl              = 'CZ00000019' # dic_popl
   c.id_provoz             = '555' # id_provoz
   c.rezim                 = '0' # rezim
 end
