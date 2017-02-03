@@ -6,15 +6,14 @@ module EET_CZ
 
     # options:
     # @prvni_zaslani: true=first try; false=retry
-    def initialize(receipt, options = {})
-      raise('certificate not found') if EET_CZ.config.ssl_cert_file.blank?
+    def initialize(client, receipt, options = {})
       @receipt = receipt
       @options = options
-      @client  = EET_CZ::Client.instance
+      @client  = client
     end
 
     def run
-      response = client.call('Trzba', soap_action: 'http://fs.mfcr.cz/eet/OdeslaniTrzby', message: message)
+      response = client.service.call('Trzba', soap_action: 'http://fs.mfcr.cz/eet/OdeslaniTrzby', message: message)
       EET_CZ::Response::Base.parse(response.doc)
       # TODO: error handling (Net::HTTP, etc..)
     end
@@ -36,9 +35,9 @@ module EET_CZ
 
     def data
       inner = {
-        '@dic_popl' => EET_CZ.config.dic_popl,
+        '@dic_popl' => client.dic_popl,
         '@id_provoz' => id_provoz,
-        '@rezim'     => EET_CZ.config.zjednoduseny_rezim && '1' || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
+        '@rezim'     => client.zjednoduseny_rezim && '1' || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
       }
 
       receipt.used_attrs.keys.each do |a|
@@ -92,7 +91,7 @@ module EET_CZ
     end
 
     def plain_text
-      [EET_CZ.config.dic_popl,
+      [client.dic_popl,
        id_provoz,
        id_pokl,
        receipt.porad_cis,
@@ -101,20 +100,11 @@ module EET_CZ
     end
 
     def private_key
-      case cert_key_type
-      when 'p12'
-        OpenSSL::PKCS12.new(File.read(EET_CZ.config.ssl_cert_key_file), EET_CZ.config.ssl_cert_key_password).key
-      when 'pem'
-        OpenSSL::PKey::RSA.new(File.read(EET_CZ.config.ssl_cert_key_file), EET_CZ.config.ssl_cert_key_password)
-      end
-    end
-
-    def cert_key_type
-      EET_CZ.config.ssl_cert_key_file.split('.').last || 'p12'
+      client.certs.private_key
     end
 
     def id_provoz
-      options[:id_provoz] || EET_CZ.config.id_provoz
+      options[:id_provoz] || client.id_provoz
     end
 
     def prvni_zaslani
@@ -122,11 +112,11 @@ module EET_CZ
     end
 
     def overeni
-      true_value?(EET_CZ.config.overovaci_mod)
+      true_value?(client.overovaci_mod)
     end
 
     def id_pokl
-      options[:id_pokl] || receipt.id_pokl || EET_CZ.config.id_pokl
+      options[:id_pokl] || receipt.id_pokl || client.id_pokl
     end
   end
 end
