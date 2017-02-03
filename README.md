@@ -23,7 +23,7 @@ Or install it yourself as:
 ```ruby
 require 'eet_cz'
 
-EET_CZ.configure do |c|
+client = EET_CZ::Client.new.tap do |c|
   c.endpoint              = EET_CZ::PG_EET_URL # or EET_CZ::PROD_EET_URL
   c.ssl_cert_file         = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem' supported
   c.ssl_cert_key_file     = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem'
@@ -35,12 +35,12 @@ EET_CZ.configure do |c|
   c.zjednoduseny_rezim    = false # `default: false`
 end
 
-receipt = EET_CZ::Receipt.new(dat_trzby:  Time.zone.now,
+receipt = client.build_receipt(dat_trzby:  Time.zone.now,
                               id_pokl:    '/4432/D12',
                               porad_cis:  '4/541/FR34',
                               celk_trzba: 25.5)
 
-request = EET_CZ::Request.new(receipt, prvni_zaslani: false) # default true
+request = client.build_request(receipt, prvni_zaslani: false) # default true
 response = request.run
 
 response.test?
@@ -73,4 +73,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/ciihla
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
