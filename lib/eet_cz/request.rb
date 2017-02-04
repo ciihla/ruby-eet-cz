@@ -21,8 +21,8 @@ module EET_CZ
     def header
       {
         'eet:Hlavicka' => {
-          '@uuid_zpravy' => receipt.uuid_zpravy, # RFC 4122
-          '@dat_odesl'     => receipt.dat_trzby, # ISO 8601
+          '@uuid_zpravy' => uuid_zpravy, # RFC 4122
+          '@dat_odesl'     => dat_odesl, # ISO 8601
           '@prvni_zaslani' => prvni_zaslani, # true=first try; false=retry
           '@overeni'       => overeni # true=testing mode; false=production mode!
         }
@@ -30,17 +30,18 @@ module EET_CZ
     end
 
     def data
-      {
-        'eet:Data' => {
-          '@dic_popl' => EET_CZ.config.dic_popl,
-          '@id_provoz'  => id_provoz,
-          '@id_pokl'    => receipt.id_pokl,
-          '@porad_cis'  => receipt.porad_cis,
-          '@dat_trzby'  => receipt.dat_trzby,
-          '@celk_trzba' => receipt.celk_trzba,
-          '@rezim'      => EET_CZ.config.rezim || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
-        }
+      inner = {
+        '@dic_popl' => EET_CZ.config.dic_popl,
+        '@id_provoz' => id_provoz,
+        '@rezim'     => EET_CZ.config.rezim || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
       }
+
+      receipt.used_attrs.keys.each do |a|
+        value = receipt.send(a)
+        inner["@#{a}"] = value unless value.nil?
+      end
+
+      { 'eet:Data' => inner }
     end
 
     def footer
@@ -77,6 +78,14 @@ module EET_CZ
 
     private
 
+    def uuid_zpravy
+      @uuid_zpravy ||= SecureRandom.uuid
+    end
+
+    def dat_odesl
+      @dat_odesl ||= Time.current.iso8601
+    end
+
     def plain_text
       [EET_CZ.config.dic_popl,
        id_provoz,
@@ -104,7 +113,7 @@ module EET_CZ
     end
 
     def prvni_zaslani
-      options[:prvni_zaslani] || true
+      options[:prvni_zaslani] == false ? false : options[:prvni_zaslani] || true
     end
 
     def overeni

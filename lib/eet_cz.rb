@@ -3,6 +3,7 @@ require 'active_support/all'
 require 'active_model'
 require 'savon'
 
+require 'eet_cz/attrs_concern'
 require 'eet_cz/version'
 require 'eet_cz/receipt'
 require 'eet_cz/request'
