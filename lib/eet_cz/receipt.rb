@@ -2,7 +2,8 @@
 module EET_CZ
   class Receipt
     include ActiveModel::Validations
-    include EET_CZ::AttrsConcern
+    include EET_CZ::Concerns::AvailableAttributes
+    include EET_CZ::Concerns::FormattedAttributes
 
     VALID_FORMAT = %r(\A[0-9a-zA-Z\.,:;\/#\-_]{1,20}\z)
 
@@ -14,12 +15,7 @@ module EET_CZ
     validates :dat_trzby, presence: true
     validates :celk_trzba, presence: true
 
-    def celk_trzba
-      format('%.2f', used_attrs[:celk_trzba].to_f)
-    end
-
-    def dat_trzby
-      used_attrs[:dat_trzby]&.iso8601
-    end
+    formatted :celk_trzba, ->(val) { format('%.2f', val.to_f) }
+    formatted :dat_trzby, ->(val) { val&.iso8601 }
   end
 end
