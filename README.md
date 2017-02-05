@@ -28,11 +28,11 @@ EET_CZ.configure do |c|
   c.ssl_cert_file         = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem' supported
   c.ssl_cert_key_file     = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem'
   c.ssl_cert_key_password = 'secret'
-  c.overeni               = true # It sends attribute: overeni='true' Or explicitly specify 'false'
-  c.debug_logger          = Logger.new('test.log') # or Logger.new($stdout) in tests?
+  c.overovaci_mod         = true # It sends attribute: overeni='true' Or explicitly specify 'false'. `default: true`
+  c.debug_logger          = Logger.new('log/eet.log') # or Logger.new($stdout) in tests?
   c.dic_popl              = 'CZ00000019' # dic_popl
   c.id_provoz             = '555' # id_provoz
-  c.rezim                 = '0' # rezim
+  c.zjednoduseny_rezim    = false # `default: false`
 end
 
 receipt = EET_CZ::Receipt.new(dat_trzby:  Time.zone.now,

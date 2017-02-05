@@ -33,7 +33,7 @@ module EET_CZ
       inner = {
         '@dic_popl' => EET_CZ.config.dic_popl,
         '@id_provoz' => id_provoz,
-        '@rezim'     => EET_CZ.config.rezim || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
+        '@rezim'     => EET_CZ.config.zjednoduseny_rezim && '1' || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
       }
 
       receipt.used_attrs.keys.each do |a|
@@ -117,7 +117,7 @@ module EET_CZ
     end
 
     def overeni
-      EET_CZ.config.overeni == false ? false : EET_CZ.config.overeni || true
+      !(EET_CZ.config.overovaci_mod === false)
     end
   end
 end
