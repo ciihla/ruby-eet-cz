@@ -20,7 +20,7 @@ describe 'real mode' do
   context 'real mode' do
     before(:each) do
       EET_CZ.configure do |config|
-        config.overeni = false
+        config.overovaci_mod = false
       end
     end
 
