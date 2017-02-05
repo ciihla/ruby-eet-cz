@@ -16,6 +16,6 @@ module EET_CZ
     validates :celk_trzba, presence: true
 
     formatted :celk_trzba, ->(val) { format('%.2f', val.to_f) }
-    formatted :dat_trzby, ->(val) { val.try!(:iso8601) }
+    formatted :dat_trzby, ->(val) { val.iso8601 if val }
   end
 end

@@ -37,7 +37,7 @@ module EET_CZ
       }
 
       receipt.used_attrs.keys.each do |a|
-        value = receipt.send(a)
+        value          = receipt.send(a)
         inner["@#{a}"] = value unless value.nil?
       end
 
@@ -89,7 +89,7 @@ module EET_CZ
     def plain_text
       [EET_CZ.config.dic_popl,
        id_provoz,
-       receipt.id_pokl,
+       id_pokl,
        receipt.porad_cis,
        receipt.dat_trzby,
        receipt.celk_trzba].join('|')
@@ -113,11 +113,15 @@ module EET_CZ
     end
 
     def prvni_zaslani
-      options[:prvni_zaslani] == false ? false : options[:prvni_zaslani] || true
+      [false, 0, '0'].exclude?(options[:prvni_zaslani])
     end
 
     def overeni
-      !(EET_CZ.config.overovaci_mod === false)
+      [false, 0, '0'].exclude?(EET_CZ.config.overovaci_mod)
+    end
+
+    def id_pokl
+      options[:id_pokl] || receipt.id_pokl || EET_CZ.config.id_pokl
     end
   end
 end

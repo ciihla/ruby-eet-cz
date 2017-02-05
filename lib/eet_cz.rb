@@ -19,8 +19,8 @@ module EET_CZ
   include ActiveSupport::Configurable
   # TODO: validation for config values?
 
-  PG_EET_URL   = 'https://pg.eet.cz:443/eet/services/EETServiceSOAP/v3/'
-  PROD_EET_URL = 'https://prod.eet.cz:443/eet/services/EETServiceSOAP/v3/'
+  PG_EET_URL   = 'https://pg.eet.cz:443/eet/services/EETServiceSOAP/v3/'.freeze
+  PROD_EET_URL = 'https://prod.eet.cz:443/eet/services/EETServiceSOAP/v3/'.freeze
 
   def self.working_dir
     Dir.pwd
