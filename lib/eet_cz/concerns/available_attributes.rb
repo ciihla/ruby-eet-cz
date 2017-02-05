@@ -14,6 +14,14 @@ module EET_CZ
         def attrs_available(attrs)
           self.available_attrs = attrs
         end
+
+        def formatted(attr, proc)
+          define_method(attr) do
+            val = used_attrs[attr.to_sym]
+            return nil if val.nil? # TODO: add options to keep nil values passed to `proc`?
+            proc.call(val)
+          end
+        end
       end
 
       def initialize(attributes = {})

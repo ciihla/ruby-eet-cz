@@ -4,7 +4,7 @@ require 'active_model'
 require 'savon'
 
 require 'eet_cz/concerns/available_attributes'
-require 'eet_cz/concerns/formatted_attributes'
+require 'eet_cz/concerns/true_value'
 require 'eet_cz/version'
 require 'eet_cz/receipt'
 require 'eet_cz/request'
@@ -21,8 +21,4 @@ module EET_CZ
 
   PG_EET_URL   = 'https://pg.eet.cz:443/eet/services/EETServiceSOAP/v3/'.freeze
   PROD_EET_URL = 'https://prod.eet.cz:443/eet/services/EETServiceSOAP/v3/'.freeze
-
-  def self.working_dir
-    Dir.pwd
-  end
 end
