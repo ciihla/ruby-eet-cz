@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module EET_CZ
   class Request
+    include EET_CZ::Concerns::TrueValue
     attr_reader :receipt, :client, :options
 
     # options:
@@ -13,9 +14,13 @@ module EET_CZ
     end
 
     def run
-      response = client.call('Trzba', soap_action: 'http://fs.mfcr.cz/eet/OdeslaniTrzby', message: [header, data, footer].reduce({}, :merge))
+      response = client.call('Trzba', soap_action: 'http://fs.mfcr.cz/eet/OdeslaniTrzby', message: message)
       EET_CZ::Response::Base.parse(response.doc)
       # TODO: error handling (Net::HTTP, etc..)
+    end
+
+    def message
+      [header, data, footer].reduce({}, :merge)
     end
 
     def header
@@ -113,11 +118,11 @@ module EET_CZ
     end
 
     def prvni_zaslani
-      [false, 0, '0'].exclude?(options[:prvni_zaslani])
+      true_value?(options[:prvni_zaslani])
     end
 
     def overeni
-      [false, 0, '0'].exclude?(EET_CZ.config.overovaci_mod)
+      true_value?(EET_CZ.config.overovaci_mod)
     end
 
     def id_pokl
