@@ -9,30 +9,26 @@ describe 'real mode' do
                         celk_trzba: 34_113.00)
   end
 
-  let(:request) { EET_CZ::Request.new(receipt) }
+  let(:request) { client.build_request(receipt) }
 
   def do_request(cassette)
-    VCR.use_cassette cassette do
+    VCR.use_cassette cassette, match_requests_on: [:method, :uri] do
       request.run
     end
   end
 
   context 'real mode' do
     before(:each) do
-      EET_CZ.configure do |config|
-        config.overovaci_mod = false
-      end
+      client.overovaci_mod = false
     end
 
     context 'play_ground' do
       before(:each) do
-        EET_CZ.configure do |config|
-          config.endpoint = EET_CZ::PG_EET_URL
-        end
+        client.endpoint = EET_CZ::PG_EET_URL
       end
 
       context 'valid request' do
-        it 'success' do
+        it 'succeeds' do
           response = do_request('trzba/real_mode/play_ground/valid')
           expect(response).to be_an_instance_of(EET_CZ::Response::Success)
           expect(response).to be_success
@@ -45,12 +41,10 @@ describe 'real mode' do
 
       context 'invalid request' do
         before(:each) do
-          EET_CZ.configure do |config|
-            config.dic_popl = 'xxx'
-          end
+          client.dic_popl = 'xxx'
         end
 
-        it 'invalid request' do
+        it 'handles an invalid request' do
           response = do_request('trzba/real_mode/play_ground/invalid')
           expect(response).to be_an_instance_of(EET_CZ::Response::Error)
           expect(response).to be_test
@@ -62,19 +56,15 @@ describe 'real mode' do
 
     context 'production' do
       before(:each) do
-        EET_CZ.configure do |config|
-          config.endpoint = EET_CZ::PROD_EET_URL
-        end
+        client.endpoint = EET_CZ::PROD_EET_URL
       end
 
       context 'invalid request' do
         before(:each) do
-          EET_CZ.configure do |config|
-            config.dic_popl = 'xxx'
-          end
+          client.dic_popl = 'xxx'
         end
 
-        it 'invalid request' do
+        it 'handles an invalid request' do
           response = do_request('trzba/real_mode/production/invalid')
           expect(response).to be_an_instance_of(EET_CZ::Response::Error)
           expect(response).not_to be_success

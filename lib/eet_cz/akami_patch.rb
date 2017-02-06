@@ -2,23 +2,25 @@
 module Akami
   class WSSE
     class Certs
+      attr_accessor :cert_type, :private_key_type
+
       def cert
-        @cert ||= case File.extname(cert_file)
-                  when '.p12'
-                    OpenSSL::PKCS12.new(File.read(cert_file), private_key_password).certificate
+        @cert ||= case cert_type
+                  when 'p12'
+                    OpenSSL::PKCS12.new(cert_string, private_key_password).certificate
                   else
-                    OpenSSL::X509::Certificate.new File.read(cert_file)
-                  end if cert_file
+                    OpenSSL::X509::Certificate.new cert_string
+                  end if cert_string
       end
 
-      # Returns an <tt>OpenSSL::PKey::RSA</tt> for the +private_key_file+.
+      # Returns an <tt>OpenSSL::PKey::RSA</tt> for the +private_key_string+.
       def private_key
-        @private_key ||= case File.extname(private_key_file)
-                         when '.p12'
-                           OpenSSL::PKCS12.new(File.read(private_key_file), private_key_password).key
+        @private_key ||= case private_key_type
+                         when 'p12'
+                           OpenSSL::PKCS12.new(private_key_string, private_key_password).key
                          else
-                           OpenSSL::PKey::RSA.new(File.read(private_key_file), private_key_password)
-                         end if private_key_file
+                           OpenSSL::PKey::RSA.new(private_key_string, private_key_password)
+                         end if private_key_string
       end
     end
 

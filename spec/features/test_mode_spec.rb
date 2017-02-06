@@ -9,7 +9,7 @@ describe 'overeni' do
                         celk_trzba: 34_113.00)
   end
 
-  let(:request) { EET_CZ::Request.new(receipt) }
+  let(:request) { client.build_request(receipt) }
 
   def do_request(cassette)
     VCR.use_cassette cassette do
@@ -19,27 +19,24 @@ describe 'overeni' do
 
   context 'test mode' do
     before(:each) do
-      EET_CZ.configure do |config|
-        config.overeni               = true
-        config.ssl_cert_file         = cert_fixture_path('EET_CA1_Playground-CZ00000019.p12')
-        config.ssl_cert_key_file     = cert_fixture_path('EET_CA1_Playground-CZ00000019.p12')
-        config.ssl_cert_key_password = 'eet'
-        config.dic_popl              = 'CZ00000019'
+      client.tap do |c|
+        c.overovaci_mod         = true
+        c.ssl_cert_file         = cert_fixture_path('EET_CA1_Playground-CZ00000019.p12')
+        c.ssl_cert_key_file     = cert_fixture_path('EET_CA1_Playground-CZ00000019.p12')
+        c.ssl_cert_key_password = 'eet'
+        c.dic_popl              = 'CZ00000019'
       end
     end
 
     context 'play_ground' do
       before(:each) do
-        EET_CZ.configure do |config|
-          config.endpoint = EET_CZ::PG_EET_URL
-        end
+        client.endpoint = EET_CZ::PG_EET_URL
       end
 
       context 'valid request' do
         it 'success warning' do
-          EET_CZ.configure do |config|
-            config.dic_popl = 'CZ1212121218'
-          end
+          client.dic_popl = 'CZ1212121218'
+
           response = do_request('trzba/test_mode/play_ground/valid-warning')
           expect(response).to be_an_instance_of(EET_CZ::Response::Error)
           expect(response.kod).to eq(0)
@@ -64,9 +61,7 @@ describe 'overeni' do
 
       context 'invalid request' do
         before(:each) do
-          EET_CZ.configure do |config|
-            config.dic_popl = 'xxx'
-          end
+          client.dic_popl = 'xxx'
         end
 
         it 'invalid' do
@@ -82,9 +77,7 @@ describe 'overeni' do
 
     context 'production' do
       before(:each) do
-        EET_CZ.configure do |config|
-          config.endpoint = EET_CZ::PROD_EET_URL
-        end
+        client.endpoint = EET_CZ::PROD_EET_URL
       end
 
       xcontext 'valid request' do # Due to a valid SSL certificate
@@ -100,9 +93,7 @@ describe 'overeni' do
 
       context 'invalid request' do
         before(:each) do
-          EET_CZ.configure do |config|
-            config.dic_popl = 'xxx'
-          end
+          client.dic_popl = 'xxx'
         end
 
         it 'not valid' do
