@@ -12,7 +12,6 @@ module EET_CZ
       end
 
       @endpoint ||= EET_CZ::PG_EET_URL
-      set_default_cert_types
     end
 
     def service
@@ -23,6 +22,7 @@ module EET_CZ
 
     def certs
       return @certs if @certs
+      set_default_cert_types
 
       @certs                      = Akami::WSSE::Certs.new
       @certs.cert_type            = ssl_cert_type
@@ -70,8 +70,8 @@ module EET_CZ
     end
 
     def set_default_cert_types
-      @ssl_cert_type = File.extname(ssl_cert_file) if ssl_cert_file
-      @ssl_cert_key_type = File.extname(ssl_cert_key_file) if ssl_cert_key_file
+      @ssl_cert_type = File.extname(ssl_cert_file).delete('.') if ssl_cert_file
+      @ssl_cert_key_type = File.extname(ssl_cert_key_file).delete('.') if ssl_cert_key_file
 
       @ssl_cert_type     ||= DEFAULT_CERT_TYPE
       @ssl_cert_key_type ||= DEFAULT_CERT_TYPE
