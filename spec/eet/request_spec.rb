@@ -2,6 +2,7 @@
 require 'spec_helper'
 
 describe EET_CZ::Request do
+
   let(:receipt) do
     EET_CZ::Receipt.new(dat_trzby:  Time.parse('2016-08-05T00:30:12+02:00'),
                         id_pokl:    '/5546/RO24',
@@ -9,7 +10,7 @@ describe EET_CZ::Request do
                         celk_trzba: 34_113.00)
   end
 
-  let(:request) { EET_CZ::Request.new(receipt) }
+  let(:request) { client.build_request(receipt) }
 
   let(:test_pem_pkp) do
     %(JvCv0lXfT74zuviJaHeO91guUfum1MKhq0NNPxW0YlBGvIIt+I4QxEC3QP6BRwEkIS14n2WN+9oQ8nhQPYwZX7L4W9Ie7CYv1ojcl/
@@ -23,21 +24,15 @@ zQO0vcC93k5DEWEoytTIAsKd6jKSO7eama8Qe+d0wq9vBzudkfLgCe2C1iERJuyHknhjo9KOx10h5wk9
 szSOdqlAdkey7M6m12AQW0LkBSPqPUi3NWa+Flo9xAPRyEKA49EQpndngu+kgPncElIfczSyhWOdQVq3D9FSwRD1ZXaY7tvyYgWLmNNF3xNn3ahCN0Hu41+wMPsqLGQw==).gsub(/\s/, '').strip
   end
 
-  before(:each) do
-    EET_CZ.configure do |config|
-      config.dic_popl = 'CZ1212121218'
-    end
-  end
-
   it 'returns instance' do
     expect(request).to be_an_instance_of(EET_CZ::Request)
   end
 
   context 'p12 key' do
     before(:each) do
-      EET_CZ.configure do |config|
-        config.ssl_cert_key_file     = cert_fixture_path('EET_CA1_Playground-CZ00000019.p12')
-        config.ssl_cert_key_password = 'eet'
+      client.tap do |c|
+        c.ssl_cert_key_file     = cert_fixture_path('EET_CA1_Playground-CZ00000019.p12')
+        c.ssl_cert_key_password = 'eet'
       end
     end
 
@@ -56,24 +51,17 @@ szSOdqlAdkey7M6m12AQW0LkBSPqPUi3NWa+Flo9xAPRyEKA49EQpndngu+kgPncElIfczSyhWOdQVq3
 
   context 'pem key' do
     before(:each) do
-      EET_CZ.configure do |config|
-        config.ssl_cert_key_file     = cert_fixture_path('private_key.pem')
-        config.ssl_cert_key_password = nil
+      client.tap do |c|
+        c.ssl_cert_key_file     = cert_fixture_path('private_key.pem')
+        c.ssl_cert_key_password = nil
       end
     end
 
     describe 'pkp' do
-      it 'valid' do
+      it 'is valid' do
         expect(request.pkp).to eq(test_pem_pkp)
       end
     end
   end
 
-  context 'client' do
-    let(:client) { request.client }
-
-    it 'returns instance' do
-      expect(client).to be_an_instance_of(Savon::Client)
-    end
-  end
 end
