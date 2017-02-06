@@ -116,7 +116,7 @@ module EET_CZ
     end
 
     def id_pokl
-      options[:id_pokl] || receipt.id_pokl || client.id_pokl
+      options[:id_pokl] || receipt.id_pokl
     end
   end
 end

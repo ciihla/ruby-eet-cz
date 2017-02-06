@@ -11,9 +11,8 @@ module EET_CZ
         send :"#{key}=", value
       end
 
-      @ssl_cert_key_type ||= DEFAULT_CERT_TYPE
-      @ssl_cert_type     ||= DEFAULT_CERT_TYPE
-      @endpoint          ||= EET_CZ::PG_EET_URL
+      @endpoint ||= EET_CZ::PG_EET_URL
+      set_default_cert_types
     end
 
     def service
@@ -68,6 +67,14 @@ module EET_CZ
 
     def ssl_cert_string
       @ssl_cert_string ||= File.read(ssl_cert_file)
+    end
+
+    def set_default_cert_types
+      @ssl_cert_type = File.extname(ssl_cert_file) if ssl_cert_file
+      @ssl_cert_key_type = File.extname(ssl_cert_key_file) if ssl_cert_key_file
+
+      @ssl_cert_type     ||= DEFAULT_CERT_TYPE
+      @ssl_cert_key_type ||= DEFAULT_CERT_TYPE
     end
   end
 end

@@ -52,8 +52,8 @@ szSOdqlAdkey7M6m12AQW0LkBSPqPUi3NWa+Flo9xAPRyEKA49EQpndngu+kgPncElIfczSyhWOdQVq3
     before(:each) do
       client.tap do |c|
         c.ssl_cert_key_file     = cert_fixture_path('private_key.pem')
-        c.ssl_cert_type         = '.pem'
-        c.ssl_cert_key_type     = '.pem'
+        c.ssl_cert_type         = 'pem'
+        c.ssl_cert_key_type     = 'pem'
         c.ssl_cert_key_password = nil
       end
     end

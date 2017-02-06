@@ -25,13 +25,14 @@ require 'eet_cz'
 
 client = EET_CZ::Client.new.tap do |c|
   c.endpoint              = EET_CZ::PG_EET_URL # or EET_CZ::PROD_EET_URL
-  c.ssl_cert_type         = '.pem' # Defaults to '.p12'
   c.ssl_cert_file         = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem' supported
-  c.ssl_cert_string       = 'certificate as String'
-  c.ssl_cert_key_type     = '.pem' # Defaults to '.p12'
   c.ssl_cert_key_file     = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem'
-  c.ssl_cert_key_string   = 'certificate as String'
   c.ssl_cert_key_password = 'secret'
+  # OR specify:
+  #  c.ssl_cert_type         = 'pem' # Defaults to extname from file or 'p12'
+  #  c.ssl_cert_string       = 'certificate as String'
+  #  c.ssl_cert_key_type     = 'pem' # Defaults to extname from file or 'p12'
+  #  c.ssl_cert_key_string   = 'certificate as String'
   c.overovaci_mod         = true # It sends attribute: overeni='true' Or explicitly specify 'false'. `default: true`
   c.debug_logger          = Logger.new('log/eet.log') # or Logger.new($stdout) in tests?
   c.dic_popl              = 'CZ00000019' # dic_popl
