@@ -25,8 +25,12 @@ require 'eet_cz'
 
 client = EET_CZ::Client.new.tap do |c|
   c.endpoint              = EET_CZ::PG_EET_URL # or EET_CZ::PROD_EET_URL
+  c.ssl_cert_type         = '.pem' # Defaults to '.p12'
   c.ssl_cert_file         = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem' supported
+  c.ssl_cert_string       = 'certificate as String'
+  c.ssl_cert_key_type     = '.pem' # Defaults to '.p12'
   c.ssl_cert_key_file     = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem'
+  c.ssl_cert_key_string   = 'certificate as String'
   c.ssl_cert_key_password = 'secret'
   c.overovaci_mod         = true # It sends attribute: overeni='true' Or explicitly specify 'false'. `default: true`
   c.debug_logger          = Logger.new('log/eet.log') # or Logger.new($stdout) in tests?
@@ -38,7 +42,12 @@ end
 receipt = client.build_receipt(dat_trzby:  Time.zone.now,
                               id_pokl:    '/4432/D12',
                               porad_cis:  '4/541/FR34',
-                              celk_trzba: 25.5)
+                              celk_trzba: 25.5,
+                              zakl_nepodl_dph: '', # Optional
+                              zakl_dan1: '', # Optional
+                              dan1: '' # Optional
+                              #... etc all possible Data attributes. See `EET_CZ::Receipt`
+  )
 
 request = client.build_request(receipt, prvni_zaslani: false) # default true
 response = request.run

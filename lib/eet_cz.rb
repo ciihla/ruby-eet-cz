@@ -16,8 +16,6 @@ require 'eet_cz/client'
 require 'eet_cz/akami_patch'
 
 module EET_CZ
-
   PG_EET_URL   = 'https://pg.eet.cz:443/eet/services/EETServiceSOAP/v3/'.freeze
   PROD_EET_URL = 'https://prod.eet.cz:443/eet/services/EETServiceSOAP/v3/'.freeze
-
 end

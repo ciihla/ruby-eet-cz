@@ -2,7 +2,6 @@
 require 'spec_helper'
 
 describe 'overeni' do
-
   let(:receipt) do
     EET_CZ::Receipt.new(dat_trzby:  Time.parse('2016-08-05T00:30:12+02:00'),
                         id_pokl:    '/5546/RO24',

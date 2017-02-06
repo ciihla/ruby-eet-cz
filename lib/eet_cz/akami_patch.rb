@@ -13,7 +13,7 @@ module Akami
                   end if cert_string
       end
 
-      # Returns an <tt>OpenSSL::PKey::RSA</tt> for the +private_key_file+.
+      # Returns an <tt>OpenSSL::PKey::RSA</tt> for the +private_key_string+.
       def private_key
         @private_key ||= case private_key_type
                          when 'p12'
