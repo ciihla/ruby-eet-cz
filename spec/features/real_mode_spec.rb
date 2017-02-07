@@ -12,7 +12,7 @@ describe 'real mode' do
   let(:request) { client.build_request(receipt) }
 
   def do_request(cassette)
-    VCR.use_cassette cassette, match_requests_on: [:method, :uri] do
+    VCR.use_cassette cassette do
       request.run
     end
   end
@@ -25,6 +25,7 @@ describe 'real mode' do
     context 'play_ground' do
       before(:each) do
         client.endpoint = EET_CZ::PG_EET_URL
+        client.dic_popl = 'CZ00000019'
       end
 
       context 'valid request' do
@@ -35,7 +36,7 @@ describe 'real mode' do
           expect(response).to be_test
           expect(response.dat_prij).to be_present
           expect(response.warnings).not_to be_present
-          expect(response.fik).to eq('92d9da29-6515-4446-87a2-c1497c561534-ff')
+          expect(response.fik).to eq('9e2cf3fa-1fa2-4985-a73d-cde8b87e3ec4-ff')
         end
       end
 
