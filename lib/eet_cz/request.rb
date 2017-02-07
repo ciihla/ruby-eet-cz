@@ -2,6 +2,7 @@
 module EET_CZ
   class Request
     include EET_CZ::Concerns::TrueValue
+    include EET_CZ::Concerns::TestMode
     attr_reader :receipt, :client, :options
 
     # options:
@@ -13,6 +14,7 @@ module EET_CZ
     end
 
     def run
+      return EET_CZ::Response::Fake.new if self.class.fake?
       response = client.service.call('Trzba', soap_action: 'http://fs.mfcr.cz/eet/OdeslaniTrzby', message: message)
       EET_CZ::Response::Base.parse(response.doc)
       # TODO: error handling (Net::HTTP, etc..)

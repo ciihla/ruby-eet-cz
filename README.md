@@ -53,6 +53,9 @@ receipt = client.build_receipt(dat_trzby:  Time.zone.now,
 request = client.build_request(receipt, prvni_zaslani: false) # default true
 response = request.run
 
+# For tests: EET_CZ::Request.fake! to disable EET call
+# Or EET_CZ::Request.real! { example.run } # request will be sent!
+
 response.test?
 response.success?
 response.fik
