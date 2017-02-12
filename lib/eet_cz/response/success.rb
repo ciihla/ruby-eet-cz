@@ -2,7 +2,7 @@
 module EET_CZ
   module Response
     class Success < Base
-      attr_reader :fik, :dat_prij
+      attr_reader :dat_prij
 
       def success?
         true

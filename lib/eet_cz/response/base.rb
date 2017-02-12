@@ -2,7 +2,7 @@
 module EET_CZ
   module Response
     class Base
-      attr_reader :doc, :uuid_zpravy, :bkp, :warnings
+      attr_reader :doc, :uuid_zpravy, :bkp, :warnings, :fik
 
       def initialize(doc)
         @doc = doc
