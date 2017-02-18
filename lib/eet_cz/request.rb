@@ -39,7 +39,7 @@ module EET_CZ
       inner = {
         '@dic_popl' => client.dic_popl,
         '@id_provoz' => id_provoz,
-        '@rezim'     => client.zjednoduseny_rezim && '1' || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
+        '@rezim'     => rezim
       }
 
       receipt.used_attrs.keys.each do |a|
@@ -80,6 +80,10 @@ module EET_CZ
     # i.e: '03ec1d0e-6d9f77fb-1d798ccb-f4739666-a4069bc3'
     def bkp(base64_pkp = pkp)
       Digest::SHA1.hexdigest(Base64.strict_decode64(base64_pkp)).upcase.scan(/.{8}/).join('-')
+    end
+
+    def rezim
+      client.zjednoduseny_rezim && '1' || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
     end
 
     private
