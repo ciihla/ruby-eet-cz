@@ -14,7 +14,10 @@ module EET_CZ
     validates :dat_trzby, presence: true
     validates :celk_trzba, presence: true
 
-    formatted :celk_trzba, ->(val) { format('%.2f', val.to_f) }
     formatted :dat_trzby, ->(val) { val.iso8601 }
+
+    %i(celk_trzba zakl_nepodl_dph zakl_dan1 dan1 zakl_dan2 dan2 zakl_dan3 dan3 cest_sluz pouzit_zboz1 pouzit_zboz2 pouzit_zboz3 urceno_cerp_zuct cerp_zuct).each do |attr|
+      formatted attr, ->(val) { format('%.2f', val.to_f) }
+    end
   end
 end
