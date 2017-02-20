@@ -4,7 +4,8 @@ module EET_CZ
     DEFAULT_CERT_TYPE = 'p12'.freeze
 
     attr_accessor :endpoint, :overovaci_mod, :debug_logger, :dic_popl, :id_provoz, :zjednoduseny_rezim, :ssl_cert_key_password,
-                  :ssl_cert_type, :ssl_cert_file, :ssl_cert_string, :ssl_cert_key_type, :ssl_cert_key_file, :ssl_cert_key_string
+                  :ssl_cert_type, :ssl_cert_file, :ssl_cert_string, :ssl_cert_key_type, :ssl_cert_key_file, :ssl_cert_key_string,
+                  :open_timeout, :read_timeout
 
     def initialize(options = {})
       options.each do |key, value|
@@ -40,6 +41,8 @@ module EET_CZ
         endpoint:             endpoint,
         namespace:            'http://fs.mfcr.cz/eet/schema/v3',
         encoding:             'UTF-8',
+        open_timeout:         open_timeout || 5,
+        read_timeout:         read_timeout || 5,
         namespace_identifier: :eet
       }
 
