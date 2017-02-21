@@ -83,7 +83,7 @@ module EET_CZ
     end
 
     def rezim
-      client.zjednoduseny_rezim && '1' || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
+      options[:rezim] || client.zjednoduseny_rezim && '1' || '0' # 0 - bezny rezim, 1 - zjednoduseny rezim
     end
 
     private
