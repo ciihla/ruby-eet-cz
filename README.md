@@ -40,7 +40,7 @@ client = EET_CZ::Client.new.tap do |c|
   c.zjednoduseny_rezim    = false # `default: false`
 end
 
-receipt = client.build_receipt(dat_trzby:  Time.zone.now,
+receipt = client.build_receipt(dat_trzby:  Time.current,
                               id_pokl:    '/4432/D12',
                               porad_cis:  '4/541/FR34',
                               celk_trzba: 25.5,
