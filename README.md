@@ -56,15 +56,35 @@ response = request.run
 # For tests: EET_CZ::Request.fake! to disable EET call
 # Or EET_CZ::Request.real! { example.run } # request will be sent!
 
-response.test?
-response.success?
-response.fik
-response.bkp
-response.uuid_zpravy
-response.dat_prij
-response.dat_odmit
-response.error
-response.warnings
+puts JSON.pretty_generate(response.as_json)
+```
+
+Running the script above should print something like:
+
+```JSON
+{
+  "doc": [
+
+  ],
+  "warnings": [
+
+  ],
+  "uuid_zpravy": "96041020-2996-406d-a90b-f967336ee738",
+  "bkp": "A3DED039-31F4AB57-DDC741E5-8CA28070-624E149C",
+  "inner_doc": [
+    [
+      "fik",
+      "382fbe6d-fa67-413a-88d9-6048dc1bd4c0-ff"
+    ],
+    [
+      "test",
+      "true"
+    ]
+  ],
+  "fik": "382fbe6d-fa67-413a-88d9-6048dc1bd4c0-ff",
+  "test": "true",
+  "dat_prij": "2017-03-04T19:01:26+01:00"
+}
 ```
 
 ## Development
