@@ -27,7 +27,7 @@ client = EET_CZ::Client.new.tap do |c|
   c.endpoint              = EET_CZ::PG_EET_URL # or EET_CZ::PROD_EET_URL
   c.ssl_cert_file         = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem' supported
   c.ssl_cert_key_file     = path_to('EET_CA1_Playground-CZ00000019.p12') # or 'pem'
-  c.ssl_cert_key_password = 'secret'
+  c.ssl_cert_key_password = 'eet'
   # OR specify:
   #  c.ssl_cert_type         = 'pem' # Defaults to extname from file or 'p12'
   #  c.ssl_cert_string       = 'certificate as String'
@@ -40,7 +40,7 @@ client = EET_CZ::Client.new.tap do |c|
   c.zjednoduseny_rezim    = false # `default: false`
 end
 
-receipt = client.build_receipt(dat_trzby:  Time.zone.now,
+receipt = client.build_receipt(dat_trzby:  Time.current,
                               id_pokl:    '/4432/D12',
                               porad_cis:  '4/541/FR34',
                               celk_trzba: 25.5,
@@ -51,31 +51,52 @@ receipt = client.build_receipt(dat_trzby:  Time.zone.now,
   )
 
 request = client.build_request(receipt, prvni_zaslani: false) # default true
-response = request.run
 
-# For tests: EET_CZ::Request.fake! to disable EET call
-# Or EET_CZ::Request.real! { example.run } # request will be sent!
+#response = EET_CZ::Request.fake! do # to disable EET call
+response = EET_CZ::Request.real! do # request will be sent!
+  request.run
+end
 
-response.test?
-response.success?
-response.fik
-response.bkp
-response.uuid_zpravy
-response.dat_prij
-response.dat_odmit
-response.error
-response.warnings
+puts JSON.pretty_generate(response.as_json)
+```
+
+Running the script above should print something like:
+
+```JSON
+{
+  "doc": [
+
+  ],
+  "warnings": [
+
+  ],
+  "uuid_zpravy": "96041020-2996-406d-a90b-f967336ee738",
+  "bkp": "A3DED039-31F4AB57-DDC741E5-8CA28070-624E149C",
+  "inner_doc": [
+    [
+      "fik",
+      "382fbe6d-fa67-413a-88d9-6048dc1bd4c0-ff"
+    ],
+    [
+      "test",
+      "true"
+    ]
+  ],
+  "fik": "382fbe6d-fa67-413a-88d9-6048dc1bd4c0-ff",
+  "test": "true",
+  "dat_prij": "2017-03-04T19:01:26+01:00"
+}
 ```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. 
-Then, run `rake spec` to run the tests. 
+After checking out the repo, run `bin/setup` to install dependencies.
+Then, run `rake spec` to run the tests.
 You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 Use `rubocop -a` to keep the code as clean as possible.
 
-To install this gem onto your local machine, run `bundle exec rake install`. 
+To install this gem onto your local machine, run `bundle exec rake install`.
 To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Thanks
