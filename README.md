@@ -78,6 +78,10 @@ Use `rubocop -a` to keep the code as clean as possible.
 To install this gem onto your local machine, run `bundle exec rake install`. 
 To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+## Thanks
+
+Sponsored and proudly used by [Queens](https://www.queens.cz) - Czech Republic´s most tasteful sneakers and clothing store.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ciihla/ruby-eet-cz. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
