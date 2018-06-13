@@ -3,9 +3,9 @@ module EET_CZ
   class Client
     DEFAULT_CERT_TYPE = 'p12'.freeze
 
-    attr_accessor :endpoint, :overovaci_mod, :debug_logger, :dic_popl, :id_provoz, :zjednoduseny_rezim, :ssl_cert_key_password,
-                  :ssl_cert_type, :ssl_cert_file, :ssl_cert_string, :ssl_cert_key_type, :ssl_cert_key_file, :ssl_cert_key_string,
-                  :open_timeout, :read_timeout
+    attr_accessor :endpoint, :overovaci_mod, :debug_logger, :dic_popl, :dic_poverujiciho, :id_provoz, :zjednoduseny_rezim,
+                  :ssl_cert_key_password, :ssl_cert_type, :ssl_cert_file, :ssl_cert_string, :ssl_cert_key_type, :ssl_cert_key_file,
+                  :ssl_cert_key_string, :open_timeout, :read_timeout
 
     def initialize(options = {})
       options.each do |key, value|

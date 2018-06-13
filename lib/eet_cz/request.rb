@@ -42,6 +42,8 @@ module EET_CZ
         '@rezim'     => rezim
       }
 
+      inner['@dic_poverujiciho'] = dic_poverujiciho if dic_poverujiciho
+
       receipt.used_attrs.keys.each do |a|
         value          = receipt.send(a)
         inner["@#{a}"] = value unless value.nil?
@@ -111,6 +113,10 @@ module EET_CZ
 
     def id_provoz
       options[:id_provoz] || client.id_provoz
+    end
+
+    def dic_poverujiciho
+      client.dic_poverujiciho
     end
 
     def prvni_zaslani
